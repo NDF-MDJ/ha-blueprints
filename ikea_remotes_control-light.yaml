@@ -105,6 +105,35 @@ blueprint:
               max: 100.0
               step: 1.0
               mode: slider
+
+    advanced_section:
+      name: Advanced
+      icon: mdi:lightbulb-on-50
+      collapsed: true
+      input:
+        dim_step:
+          name: Dim step
+          description: Brightness increment/decrement for each dimming step
+          default: 5
+          selector:
+            number:
+              unit_of_measurement: "%"
+              min: 1.0
+              max: 25.0
+              step: 1.0
+              mode: slider
+        dim_delay:
+          name: Dim delay
+          description: Delay between dimming steps
+          default: 0.05
+          selector:
+            number:
+              unit_of_measurement: "s"
+              min: 0.01
+              max: 1.0
+              step: 0.01
+              mode: slider
+
 mode: restart
 max_exceeded: silent
 
@@ -260,8 +289,8 @@ triggers:
     enabled: "{{ mqtt_enabled }}"
 variables:
   helper_force_brightness: !input helper_force_brightness
-  helper_hold_delay: 0.1
-  helper_hold_dim_step: 4
+  helper_hold_delay: !input dim_delay
+  helper_hold_dim_step: !input dim_step
   is_mqtt: "{{ trigger.platform == 'mqtt' }}"
   is_zha: "{{ trigger.platform == 'event' and trigger.event.event_type == 'zha_event' }}"
   light: !input light
